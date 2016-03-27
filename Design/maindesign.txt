@@ -1,0 +1,69 @@
+|||||||||||||||||||||||||||||||||||||||||||||||
+||██|█||||||█|||||||||||██|||███|||||||█||██|||
+||█|█||██||███|█|█|█|█|█|█|||█||||██||█||█|█|||
+||█|█|█||█||█||█||█||█||███||█|||█||█|██||███||
+|||||||||||||||||||||||||||||||||||||||||||||||
+(Temp name)
+
+Story stuff
+  2 races - aliens and robots (temp names)
+  robots are defenders of the universe
+  aliens are (probably) native inhabitants of the area
+  dank memes featured throughout game
+
+Combat
+  Aliens get more bonuses to support/ewar stuff, robots to damage/direct speed
+  Weapon types - Drones, missiles, guns(+ewar)
+  Tracking - Speed turrets rotate at
+  Missiles have speed, rotation speed, and fuel
+  Capacitor
+    Ships have limited recharging cap to use on modules
+  Drone bay
+    Seperate UI element ships with a drone bay have
+    Can send out drones
+    Drones automatically restocked in a station
+    Station allows you to choose drones to use
+  Triage
+    Stops ship, heavily improves local tank, disables regular remote repair modules
+    When in triage beams go between ally ships to player, player can click on beams to change from active/not, drains more cap the more beams active
+  Plasma
+    Stops ship, heavily improves local tank
+    Allows player to control plasma drones(temp name) that make a lightning damage grid between them
+  Special modules
+    Combat warp - Hold key to extend warp in ship direction, then micro warp there quickly (Inty only)
+    Covert combat warp - Same as combat warp but can use while cloaked, flashes out of cloak on land
+    Cloaking - Cloaks ship until it shoots, when it shoots it decloaks for time, getting near ships decloak you, decreased move speed while cloaked
+    Warp disruptor - Emits a pulse in a direction which stops the warp of ships for time
+  Tanking
+    Armor and shield
+  Ally system
+    Can bring allies to fill holes in fleet comp
+
+Ships
+  Ships for each race, NPC enemies use ships of their race
+  Ship classes
+    Small
+      Frigate - Small early tier ship, goes fast, infinite tracking
+      Interceptor - Small higher tier ship, goes fast, infinite tracking
+        Can combat warp
+      Destroyer - Smallish early tier ship, goes ~cruiser speed, high damage for infinite tracking
+    Medium
+      Cruiser - Medium early tier ship, goes somewhat fast, medium damage and decent tracking
+      Battlecruiser - Medium-big early tier ship, goes medium-low speed, high damage, medium-low tracking, cruiser sized tank
+      Tactical cruiser - Medium high tier ship, low tanked, medium-low speed, uses a lot of ewar/support stuff
+      Assault cruiser - Medium high tier ship, pretty well tanked, medium speed, highish damage with slightly lower than cruiser tracking
+    Large
+      Battleship - Large early tier ship, low speed, high tank, high damage with low tracking
+      Carrier - Large early tier ship, low speed, high tank, has drone bay
+      Logistics - Large early tier ship, low speed, high tank, can use remote repair, small drone bay
+      Black ops - Large high tier ship, low speed, medium tank, high damage with medium-low tracking, can use covert combat warp and cloaking
+    Capital
+      Supercarrier - XLarge high tier ship, Xlow speed, Xhigh tank, Xlarge drone bay, can use remote repair, can use triage
+      Dreadnought - XLarge high tier ship, Xlow speed, Xhigh tank, can use XLarge weapons, Xlow tracking, can use plasma mode
+
+Technical stuff
+  Rendering
+    UI rendered seperately from main game for aspect ratio reasons
+  World generation
+    Do generation of certain objects (eg stations) seperately(reset seed, less stuff maybe) so their positions can be predicted easier
+    Sector anchor at middle of each sector, use for what sectors to (re)generate
