@@ -4,7 +4,7 @@ CC=g++-4.9
 CFLAGS=-c -g -Wall -ansi -pedantic -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -std=gnu++11
 
 ERASE=rm
-OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o
+OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o
 DIR=gnu/
 EXE=nativeRace
 
@@ -24,6 +24,9 @@ $(DIR)graphics_components.o : graphics_components.cpp graphics_components.hpp
 
 $(DIR)component.o : component.cpp component.hpp
 	$(CC) -o $(DIR)component.o $(CFLAGS) component.cpp
+
+$(DIR)game.o : game.cpp game.hpp
+	$(CC) -o $(DIR)game.o $(CFLAGS) game.cpp
 
 clean :
 	$(ERASE) $(EXE) $(OBJECTS)

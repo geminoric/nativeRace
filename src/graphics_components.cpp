@@ -10,4 +10,9 @@ render::render()
   idAlreadyCreated = true;
 }
 
+render::~render()
+{
+
+}
+
 

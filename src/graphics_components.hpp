@@ -7,6 +7,7 @@ class render : public component
 {
 public:
   render();
+  ~render();
   void onUpdate() {}
   void onStart() {}
   //Used to increment the id only when a new component type is created

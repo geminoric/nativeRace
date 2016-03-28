@@ -1,7 +1,7 @@
 #include "graphics_core.hpp"
 #include "graphics_components.hpp"
 
-namespace StatusValues
+namespace statusValues
 {
   volatile int gameIsRunning = 1;
 }
@@ -10,8 +10,9 @@ int main()
 {
   //Init stuff
   initGraphics(1920, 1080, "Native Race");
+  loadAllTextures();
 
-  while(StatusValues::gameIsRunning)
+  while(statusValues::gameIsRunning)
   {
       renderFrame();
       checkCloseWindow();
