@@ -5,6 +5,9 @@
 #define GRAPHICS_CORE_HPP
 
 #include <string>
+#include <vector>
+
+class gameObject;
 
 namespace sf
 {
@@ -14,7 +17,7 @@ namespace sf
 //Returns 0 if no error
 int initGraphics(int resX, int resY, const char *windowTitle);
 int loadAllTextures();
-int renderFrame();
+int renderFrame(std::vector<gameObject *> &objects);
 //Call this every frame to check if the window needs to be closed
 void checkCloseWindow();
 //Destroys the window, as well as all other graphics components

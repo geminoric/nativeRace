@@ -1,8 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <utility>
+#include <algorithm>
 #include <iostream>
 #include "graphics_core.hpp"
+#include "graphics_components.hpp"
+#include "game.hpp"
+#include "game_object.hpp"
 
 namespace
 {
@@ -49,10 +53,35 @@ int loadAllTextures()
   return ret;
 }
 
+bool zOrderComp(gameObject *obj1, gameObject *obj2)
+{
+  if(obj1->getZ() < obj2->getZ())return true;
+  return false;
+}
+
+void renderObj(gameObject &obj)
+{
+  render *rendercomp;
+  if(!(rendercomp = obj.getComponent<render>("render")))return;
+  
+  sf::Sprite newSprite(*(rendercomp->comptexture));
+  newSprite.setPosition(obj.getX(), obj.getY());
+  pwindow->draw(newSprite);
+}
+
 //Returns 0 if no error
-int renderFrame()
+int renderFrame(std::vector<gameObject *> &objects)
 {
   pwindow->clear();
+
+  //Sort game object list by z order
+  std::sort(objects.begin(), objects.end(), zOrderComp);
+  //Render each object
+  for(std::vector<gameObject *>::iterator i = objects.begin();i != objects.end();++i)
+  {
+    renderObj(**i);
+  }
+
   pwindow->display();
   return 0;
 }

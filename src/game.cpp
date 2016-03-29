@@ -64,4 +64,13 @@ namespace gameControl
     gameObjects.push_back(newobj);
     return newobj;
   }
+
+  void deleteAllObjects()
+  {
+    while(!gameObjects.empty())
+    {
+      delete gameObjects.back();
+      gameObjects.pop_back();
+    }
+  }
 }

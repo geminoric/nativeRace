@@ -7,9 +7,10 @@ public:
   virtual void onUpdate() {}
   virtual void onStart() {}
   virtual ~component() {}
+  virtual const char *getCompName() { return "component"; }
   //The id of the component, each component type has a unique id
   static int totalID;
-  int id = 0;
+  static int id;
 };
 
 #endif

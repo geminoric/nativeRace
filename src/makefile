@@ -4,7 +4,7 @@ CC=g++-4.9
 CFLAGS=-c -g -Wall -ansi -pedantic -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -std=gnu++11
 
 ERASE=rm
-OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o
+OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o
 DIR=gnu/
 EXE=nativeRace
 
@@ -13,10 +13,10 @@ EXE=nativeRace
 $(EXE) : $(OBJECTS)
 	$(CC) -o $(EXE) $(OBJECTS) -lsfml-graphics -lsfml-window -lsfml-system
 
-$(DIR)main.o : main.cpp
+$(DIR)main.o : main.cpp graphics_core.hpp game.hpp game_object.hpp
 	$(CC) -o $(DIR)main.o $(CFLAGS) main.cpp
   
-$(DIR)graphics_core.o : graphics_core.cpp graphics_core.hpp
+$(DIR)graphics_core.o : graphics_core.cpp graphics_core.hpp graphics_components.hpp game.hpp game_object.hpp
 	$(CC) -o $(DIR)graphics_core.o $(CFLAGS) graphics_core.cpp
 
 $(DIR)graphics_components.o : graphics_components.cpp graphics_components.hpp
@@ -25,8 +25,11 @@ $(DIR)graphics_components.o : graphics_components.cpp graphics_components.hpp
 $(DIR)component.o : component.cpp component.hpp
 	$(CC) -o $(DIR)component.o $(CFLAGS) component.cpp
 
-$(DIR)game.o : game.cpp game.hpp
+$(DIR)game.o : game.cpp game.hpp game_object.hpp
 	$(CC) -o $(DIR)game.o $(CFLAGS) game.cpp
+
+$(DIR)game_object.o : game_object.cpp game_object.hpp
+	$(CC) -o $(DIR)game_object.o $(CFLAGS) game_object.cpp
 
 clean :
 	$(ERASE) $(EXE) $(OBJECTS)
