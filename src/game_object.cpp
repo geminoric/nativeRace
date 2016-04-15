@@ -1,3 +1,4 @@
+#include <vector>
 #include "game_object.hpp"
 
 bool gameObject::hasComponent(int componentID)
@@ -7,4 +8,10 @@ bool gameObject::hasComponent(int componentID)
     if(componentID == (*i)->id)return true;
   }
   return false;
+}
+
+void gameObject::addComponent(component *newComponent)
+{
+  newComponent->owner = this;
+  components.push_back(std::shared_ptr<component>(newComponent));
 }

@@ -22,6 +22,8 @@ namespace gameControl
   //Returns the created object
   gameObject * createObject(int x = 0, int y = 0, float z = 0.0f);
   void deleteAllObjects();
+  //Runs onUpdate() for all game objects
+  void runObjectUpdate();
 }
 
 #endif

@@ -8,20 +8,21 @@
 
 class gameObject
 {
-  int x, y;
+  float x, y;
   //The position the game object will be rendered in, lower numbers rendered first (behind)
   float zOrder = 0;
 public:
-  gameObject() : x(0), y(0), zOrder(0.0f) {}
+  gameObject() : x(0.0f), y(0.0f), zOrder(0.0f) {}
   gameObject(int nx, int ny, float nz): x(nx), y(ny), zOrder(nz) {}
-  int getX() const { return x; }
-  int getY() const { return y; }
+  float getX() const { return x; }
+  float getY() const { return y; }
   float getZ() const { return zOrder; }
   void setX(int xLoc) { x = xLoc; }
   void setY(int yLoc) { y = yLoc; }
   void setZ(float newZ) { zOrder = newZ; }
 
   std::vector<std::shared_ptr<component>> components;
+  void addComponent(component *newComponent);
   bool hasComponent(int componentID);
   //Return 0 if component not found
   template <typename T> T *getComponent(int componentID);

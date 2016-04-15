@@ -23,6 +23,9 @@ void checkCloseWindow();
 //Destroys the window, as well as all other graphics components
 void unloadGraphics();
 void loadTexture(const char *loc, const char *name, int *currentret);
+void loadTextureFromSpriteSheet(const char *loc, const char *name, int *currentret,
+                                int xSize, int ySize, int xLeftSpriteSheet, int yTopSpriteSheet);
 sf::Texture *findTexture(std::string name);
+std::pair<float, float> getTextureSize(sf::Texture *text);
 
 #endif

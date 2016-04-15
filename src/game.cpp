@@ -1,4 +1,5 @@
 #include <vector>
+#include <memory>
 #include "game.hpp"
 #include "game_object.hpp"
 
@@ -71,6 +72,17 @@ namespace gameControl
     {
       delete gameObjects.back();
       gameObjects.pop_back();
+    }
+  }
+
+  void runObjectUpdate()
+  {
+    for(std::vector<gameObject *>::iterator i = gameObjects.begin(); i != gameObjects.end(); ++i)
+    {
+      for(std::vector<std::shared_ptr<component>>::iterator j = (*i)->components.begin(); j != (*i)->components.end(); ++j)
+      {
+        (*j)->onUpdate();
+      }
     }
   }
 }

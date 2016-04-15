@@ -1,7 +1,7 @@
 # Macros ========================================
 
 CC=g++-4.9
-CFLAGS=-c -g -Wall -ansi -pedantic -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -std=gnu++11
+CFLAGS=-c -g -O2 -Wall -ansi -pedantic -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -std=gnu++11 -Wno-reorder
 
 ERASE=rm
 OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o
