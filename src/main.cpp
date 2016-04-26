@@ -30,8 +30,13 @@ int main()
   int fpsUpdateCountCur = 0;
 
   //Test animation stuff
-  gameObject *test = gameControl::createObject(300.0f, 200.0f, 0.0f);
-  test->addComponent(new render("playerDownSprite1", 16.0f, 16.0f, 8.0f, 8.0f));
+  for(int i = 0;i < 3000;++i)
+  {
+    gameObject *test = gameControl::createObject(rand() % (1920 * 8), rand() % (1080 * 8), 0.0f);
+    test->addComponent(new render("bombDroneOn", 0, 512, 0, 512, 16.0f, 16.0f, 0.25f, 0.25f));
+  }
+
+  /*
   test->addComponent(new animation(test, 0.2f));
   animation *animtest = test->getComponent<animation>("animation");
   animtest->addAnimationFrame(findTexture("playerDownSprite1"));
@@ -39,6 +44,7 @@ int main()
   animtest->addAnimationFrame(findTexture("playerDownSprite3"));
   animtest->addAnimationFrame(findTexture("playerDownSprite4"));
   animtest->addAnimationFrame(findTexture("playerDownSprite5"));
+  */
 
   std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 

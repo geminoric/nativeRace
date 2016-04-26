@@ -9,7 +9,9 @@ namespace statusValues
   extern float timeMultiplier;
 }
 
-render::render(float sizX, float sizY, float scalX, float scalY) : scaleX(scalX), scaleY(scalY), sizeX(sizX), sizeY(sizY)
+render::render(int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
+  float scalX, float scalY) : textX1(texX1), textX2(texX2), textY1(texY1), textY2(texY2), scaleX(scalX),
+  scaleY(scalY), sizeX(sizX), sizeY(sizY), textXSize(texX2 - texX1), textYSize(texY2 - texY1)
 {
   //Increment the id 
   if(idAlreadyCreated)return;
@@ -17,7 +19,10 @@ render::render(float sizX, float sizY, float scalX, float scalY) : scaleX(scalX)
   idAlreadyCreated = true;
 }
 
-render::render(sf::Texture *texture, float sizX, float sizY, float scalX, float scalY) : comptexture(texture), scaleX(scalX), scaleY(scalY), sizeX(sizX), sizeY(sizY)
+render::render(sf::Texture *texture, int texX1, int texX2, int texY1, int texY2,
+  float sizX, float sizY, float scalX, float scalY)
+  : comptexture(texture), textX1(texX1), textX2(texX2), textY1(texY1), textY2(texY2), scaleX(scalX),
+    scaleY(scalY), sizeX(sizX), sizeY(sizY), textXSize(texX2 - texX1), textYSize(texY2 - texY1)
 {
   //Increment the id 
   if(idAlreadyCreated)return;
@@ -25,7 +30,10 @@ render::render(sf::Texture *texture, float sizX, float sizY, float scalX, float 
   idAlreadyCreated = true;
 }
 
-render::render(const char *textName, float sizX, float sizY, float scalX, float scalY) : comptexture(findTexture(textName)), scaleX(scalX), scaleY(scalY), sizeX(sizX), sizeY(sizY)
+render::render(const char *textName, int texX1, int texX2, int texY1, int texY2,
+  float sizX, float sizY, float scalX, float scalY)
+  : comptexture(findTexture(textName)), textX1(texX1), textX2(texX2), textY1(texY1), textY2(texY2),
+    scaleX(scalX), scaleY(scalY), sizeX(sizX), sizeY(sizY), textXSize(texX2 - texX1), textYSize(texY2 - texY1)
 {
   //Increment the id 
   if(idAlreadyCreated)return;

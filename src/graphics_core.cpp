@@ -29,6 +29,10 @@ namespace loadedTextures
 int initGraphics(int resX, int resY, const char *windowTitle)
 {
   pwindow = new sf::RenderWindow(sf::VideoMode(resX, resY), windowTitle);
+
+  sf::View view(sf::FloatRect(0, 0, 1920 * 8, 1080 * 8));
+  pwindow->setView(view);
+
   pwindow->setFramerateLimit(MAX_FRAMERATE);
   return 0;
 }
@@ -67,12 +71,8 @@ int loadAllTextures()
 {
   int ret = 0;
   
-  loadTextureFromSpriteSheet("../images/character_sheet.png", "playerDownSprite1", &ret, 16, 16, 0, 0);
-  loadTextureFromSpriteSheet("../images/character_sheet.png", "playerDownSprite2", &ret, 16, 16, 16, 0);
-  loadTextureFromSpriteSheet("../images/character_sheet.png", "playerDownSprite3", &ret, 16, 16, 32, 0);
-  loadTextureFromSpriteSheet("../images/character_sheet.png", "playerDownSprite4", &ret, 16, 16, 48, 0);
-  loadTextureFromSpriteSheet("../images/character_sheet.png", "playerDownSprite5", &ret, 16, 16, 64, 0);
-
+  loadTexture("../images/BombDrone_On.png", "bombDroneOn", &ret, 512, 512);
+  loadTexture("../images/testship.png", "testShip", &ret, 512, 512);
 
   return ret;
 }
@@ -88,41 +88,95 @@ void renderObj(gameObject &obj)
   render *rendercomp;
   if(!(rendercomp = obj.getComponent<render>("render")))return;
   
+  /*
   std::pair<float, float> textSize = getTextureSize(rendercomp->comptexture);
   float textX = textSize.first;
   float textY = textSize.second;
+  */
 
   sf::VertexArray quadver(sf::Quads, 4);
   quadver[0].position = sf::Vector2f(obj.getX(), obj.getY());
-  quadver[1].position = sf::Vector2f(obj.getX() + textX, obj.getY());
-  quadver[2].position = sf::Vector2f(obj.getX() + textX, obj.getY() + textY);
-  quadver[3].position = sf::Vector2f(obj.getX(), obj.getY() + textY);
+  quadver[1].position = sf::Vector2f(obj.getX() + rendercomp->textXSize, obj.getY());
+  quadver[2].position = sf::Vector2f(obj.getX() + rendercomp->textXSize, obj.getY() + rendercomp->textYSize);
+  quadver[3].position = sf::Vector2f(obj.getX(), obj.getY() + rendercomp->textYSize);
 
-  quadver[0].texCoords = sf::Vector2f(0,0);
-  quadver[1].texCoords = sf::Vector2f(textX,0);
-  quadver[2].texCoords = sf::Vector2f(textX,textY);
-  quadver[3].texCoords = sf::Vector2f(0,textY);
+  quadver[0].texCoords = sf::Vector2f(rendercomp->textX1, rendercomp->textY1);
+  quadver[1].texCoords = sf::Vector2f(rendercomp->textX2, rendercomp->textY1);
+  quadver[2].texCoords = sf::Vector2f(rendercomp->textX2, rendercomp->textY2);
+  quadver[3].texCoords = sf::Vector2f(rendercomp->textX1, rendercomp->textY2);
 
   sf::RenderStates states;
-  sf::Transform trans;
-  trans.scale(rendercomp->scaleX, rendercomp->scaleY, obj.getX() + rendercomp->sizeX / 2, obj.getY() + rendercomp->sizeY / 2);
-  states.transform = trans;
+  //sf::Transform trans;
+  //trans.scale(rendercomp->scaleX, rendercomp->scaleY, obj.getX() + rendercomp->sizeX / 2, obj.getY() + rendercomp->sizeY / 2);
+  //states.transform = trans;
   states.texture = rendercomp->comptexture;
 
   pwindow->draw(quadver, states);
+}
+
+void renderObjectLists(std::vector<std::pair<sf::Texture *, sf::VertexArray>> &renderList)
+{
+  for(std::vector<std::pair<sf::Texture *, sf::VertexArray>>::iterator i = renderList.begin(); i != renderList.end();++i)
+  {
+    sf::RenderStates states;
+    states.texture = i->first;
+
+    pwindow->draw(i->second, states);
+  }
 }
 
 //Returns 0 if no error
 int renderFrame(std::vector<gameObject *> &objects)
 {
   pwindow->clear();
+  if(objects.empty())
+  {
+    pwindow->display();
+    return 0;
+  }
 
   //Sort game object list by z order
   std::sort(objects.begin(), objects.end(), zOrderComp);
-  //Render each object
+
+  float curZOrder = -10042001.0f;
+  sf::Texture *curTexture = 0;
+  std::vector<std::pair<sf::Texture *, sf::VertexArray>> rList;
+  sf::VertexArray vertices(sf::Quads, 64);
+
+  //Create vertex array for each texture per z order and draw it
   for(std::vector<gameObject *>::iterator i = objects.begin();i != objects.end();++i)
   {
-    renderObj(**i);
+    render *rendercomp;
+    if(!(rendercomp = (*i)->getComponent<render>("render")))continue;
+
+    if(curZOrder != (*i)->getZ())
+    {
+      rList.push_back(std::pair<sf::Texture *, sf::VertexArray>(curTexture, vertices));
+      //Draw/clear list and update z order
+      if(!rList.empty())renderObjectLists(rList);
+      curZOrder = (*i)->getZ();
+      rList.clear();
+      vertices.clear();
+    }
+
+    if(curTexture != rendercomp->comptexture)
+    {
+      rList.push_back(std::pair<sf::Texture *, sf::VertexArray>(curTexture, vertices));
+      vertices.clear();
+      curTexture = rendercomp->comptexture;
+    }
+
+    //Add object's vertices to vertex array
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX(), (*i)->getY()), sf::Vector2f(rendercomp->textX1, rendercomp->textY1)));
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + rendercomp->textXSize, (*i)->getY()), sf::Vector2f(rendercomp->textX2, rendercomp->textY1)));
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + rendercomp->textXSize, (*i)->getY() + rendercomp->textYSize), sf::Vector2f(rendercomp->textX2, rendercomp->textY2)));
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX(), (*i)->getY() + rendercomp->textYSize), sf::Vector2f(rendercomp->textX1, rendercomp->textY2)));
+  }
+  //Render final objects
+  if(vertices.getVertexCount())
+  {
+    rList.push_back(std::pair<sf::Texture *, sf::VertexArray>(curTexture, vertices));
+    renderObjectLists(rList);
   }
 
   pwindow->display();
