@@ -1,5 +1,6 @@
 #include "graphics_components.hpp"
 #include "game_object.hpp"
+#include <iostream>
 
 bool render::idAlreadyCreated = false;
 bool animation::idAlreadyCreated = false;
@@ -10,8 +11,10 @@ namespace statusValues
 }
 
 render::render(int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
-  float scalX, float scalY) : textX1(texX1), textX2(texX2), textY1(texY1), textY2(texY2), scaleX(scalX),
-  scaleY(scalY), sizeX(sizX), sizeY(sizY), textXSize(texX2 - texX1), textYSize(texY2 - texY1)
+  int red_, int blue_, int green_, int alpha_, float rotRad) :
+  textX1(texX1), textX2(texX2), textY1(texY1), textY2(texY2), 
+  sizeX(sizX), sizeY(sizY), textXSize(sizX), textYSize(sizY),
+  red(red_), green(green_), blue(blue_), alpha(alpha_), rot(rotRad)
 {
   //Increment the id 
   if(idAlreadyCreated)return;
@@ -20,9 +23,10 @@ render::render(int texX1, int texX2, int texY1, int texY2, float sizX, float siz
 }
 
 render::render(sf::Texture *texture, int texX1, int texX2, int texY1, int texY2,
-  float sizX, float sizY, float scalX, float scalY)
-  : comptexture(texture), textX1(texX1), textX2(texX2), textY1(texY1), textY2(texY2), scaleX(scalX),
-    scaleY(scalY), sizeX(sizX), sizeY(sizY), textXSize(texX2 - texX1), textYSize(texY2 - texY1)
+  float sizX, float sizY, int red_, int blue_, int green_, int alpha_, float rotRad)
+  : comptexture(texture), textX1(texX1), textX2(texX2), textY1(texY1), textY2(texY2), 
+  sizeX(sizX), sizeY(sizY), textXSize(sizX), textYSize(sizY),
+  red(red_), green(green_), blue(blue_), alpha(alpha_), rot(rotRad)
 {
   //Increment the id 
   if(idAlreadyCreated)return;
@@ -31,9 +35,10 @@ render::render(sf::Texture *texture, int texX1, int texX2, int texY1, int texY2,
 }
 
 render::render(const char *textName, int texX1, int texX2, int texY1, int texY2,
-  float sizX, float sizY, float scalX, float scalY)
+  float sizX, float sizY, int red_, int blue_, int green_, int alpha_, float rotRad)
   : comptexture(findTexture(textName)), textX1(texX1), textX2(texX2), textY1(texY1), textY2(texY2),
-    scaleX(scalX), scaleY(scalY), sizeX(sizX), sizeY(sizY), textXSize(texX2 - texX1), textYSize(texY2 - texY1)
+    sizeX(sizX), sizeY(sizY), textXSize(sizX), textYSize(sizY),
+  red(red_), green(green_), blue(blue_), alpha(alpha_), rot(rotRad)
 {
   //Increment the id 
   if(idAlreadyCreated)return;

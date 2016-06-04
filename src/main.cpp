@@ -2,6 +2,8 @@
 #include "graphics_components.hpp"
 #include "game.hpp"
 #include "game_object.hpp"
+#include "background.hpp"
+#include "camera.hpp"
 #include <vector>
 #include <memory>
 #include <iostream>
@@ -17,6 +19,13 @@ namespace statusValues
   float deltaT = 0.01;
   // 1/framerate * deltaT
   float timeMultiplier = 1.0;
+  int resX = 1920;
+  int resY = 1080;
+}
+
+namespace comPointers
+{
+  camera *pCamera;
 }
 
 int main()
@@ -29,22 +38,9 @@ int main()
   int fpsUpdateCountRes = 5;
   int fpsUpdateCountCur = 0;
 
-  //Test animation stuff
-  for(int i = 0;i < 3000;++i)
-  {
-    gameObject *test = gameControl::createObject(rand() % (1920 * 8), rand() % (1080 * 8), 0.0f);
-    test->addComponent(new render("bombDroneOn", 0, 512, 0, 512, 16.0f, 16.0f, 0.25f, 0.25f));
-  }
-
-  /*
-  test->addComponent(new animation(test, 0.2f));
-  animation *animtest = test->getComponent<animation>("animation");
-  animtest->addAnimationFrame(findTexture("playerDownSprite1"));
-  animtest->addAnimationFrame(findTexture("playerDownSprite2"));
-  animtest->addAnimationFrame(findTexture("playerDownSprite3"));
-  animtest->addAnimationFrame(findTexture("playerDownSprite4"));
-  animtest->addAnimationFrame(findTexture("playerDownSprite5"));
-  */
+  gameObject *cam = gameControl::createObject(0, 0, 0.0f);
+  cam->addComponent(new camera(0.0f, 0.0f, true));
+  backgroundGeneration();
 
   std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
@@ -61,9 +57,9 @@ int main()
       {
         //Print framerate
         statusValues::deltaT = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() / (1000.0f * fpsUpdateCountRes);
-        std::cout << "FPS: " <<
+        /*std::cout << "FPS: " <<
           1.0f / statusValues::deltaT
-          << std::endl;
+          << std::endl;*/
         //Reset frame timer
         start = std::chrono::steady_clock::now();
         fpsUpdateCountCur = 0;

@@ -19,16 +19,22 @@ public:
   float scaleY;
   float sizeX;
   float sizeY;
+  float rot; //Radians
   int textX1, textX2, textY1, textY2;
   int textXSize, textYSize;
+  int red, green, blue, alpha;
   sf::Texture *comptexture;
 
   //Used to increment the id only when a new component type is created
   static bool idAlreadyCreated;
 
-  render(int texX1, int texX2, int texY1, int texY2, float sizX, float sizY, float scalX = 1.0f, float scalY = 1.0f);
-  render(sf::Texture *texture, int texX1, int texX2, int texY1, int texY2, float sizX, float sizY, float scaleX = 1.0f, float scaleY = 1.0f);
-  render(const char *textName, int texX1, int texX2, int texY1, int texY2, float sizX, float sizY, float scaleX = 1.0f, float scaleY = 1.0f);
+  //sizX, sizY (textXSize, textYSize) sets visible size
+  render(int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
+    int red_ = 255, int blue_ = 255, int green_ = 255, int alpha_ = 255, float rotRad = 0.0f);
+  render(sf::Texture *texture, int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
+    int red_ = 255, int blue_ = 255, int green_ = 255, int alpha_ = 255, float rotRad = 0.0f);
+  render(const char *textName, int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
+    int red_ = 255, int blue_ = 255, int green_ = 255, int alpha_ = 255, float rotRad = 0.0f);
   ~render();
   void setTexture(sf::Texture *texture) { comptexture = texture; }
   void onUpdate() {}

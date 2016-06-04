@@ -3,6 +3,7 @@
 #include <utility>
 #include <algorithm>
 #include <iostream>
+#include <cmath>
 #include "graphics_core.hpp"
 #include "graphics_components.hpp"
 #include "game.hpp"
@@ -10,7 +11,7 @@
 
 const int MAX_FRAMERATE = 60;
 
-namespace
+namespace graphicsValues
 {
   sf::RenderWindow *pwindow;
 }
@@ -28,12 +29,12 @@ namespace loadedTextures
 //Returns 0 if no error
 int initGraphics(int resX, int resY, const char *windowTitle)
 {
-  pwindow = new sf::RenderWindow(sf::VideoMode(resX, resY), windowTitle);
+  graphicsValues::pwindow = new sf::RenderWindow(sf::VideoMode(resX, resY), windowTitle);
 
-  sf::View view(sf::FloatRect(0, 0, 1920 * 8, 1080 * 8));
-  pwindow->setView(view);
+  sf::View view(sf::FloatRect(0, 0, 1920, 1080));
+  graphicsValues::pwindow->setView(view);
 
-  pwindow->setFramerateLimit(MAX_FRAMERATE);
+  graphicsValues::pwindow->setFramerateLimit(MAX_FRAMERATE);
   return 0;
 }
 
@@ -73,6 +74,15 @@ int loadAllTextures()
   
   loadTexture("../images/BombDrone_On.png", "bombDroneOn", &ret, 512, 512);
   loadTexture("../images/testship.png", "testShip", &ret, 512, 512);
+  loadTexture("../images/Planet_01.png", "Planet_01", &ret, 512, 512);
+  loadTexture("../images/Planet_02.png", "Planet_02", &ret, 512, 512);
+  loadTexture("../images/Planet_03.png", "Planet_03", &ret, 512, 512);
+  loadTexture("../images/Star_01.png", "Star_01", &ret, 32, 32);
+  loadTexture("../images/Star_02.png", "Star_02", &ret, 32, 32);
+  loadTexture("../images/Star_03.png", "Star_03", &ret, 32, 32);
+  loadTexture("../images/Star_04.png", "Star_04", &ret, 32, 32);
+  loadTexture("../images/Star_04_Inside.png", "Star_04_Inside", &ret, 32, 32);
+  loadTexture("../images/WhitePixel.png", "WhitePixel", &ret, 4, 4);
 
   return ret;
 }
@@ -83,16 +93,11 @@ bool zOrderComp(gameObject *obj1, gameObject *obj2)
   return false;
 }
 
+//Old code
 void renderObj(gameObject &obj)
 {
   render *rendercomp;
   if(!(rendercomp = obj.getComponent<render>("render")))return;
-  
-  /*
-  std::pair<float, float> textSize = getTextureSize(rendercomp->comptexture);
-  float textX = textSize.first;
-  float textY = textSize.second;
-  */
 
   sf::VertexArray quadver(sf::Quads, 4);
   quadver[0].position = sf::Vector2f(obj.getX(), obj.getY());
@@ -106,12 +111,9 @@ void renderObj(gameObject &obj)
   quadver[3].texCoords = sf::Vector2f(rendercomp->textX1, rendercomp->textY2);
 
   sf::RenderStates states;
-  //sf::Transform trans;
-  //trans.scale(rendercomp->scaleX, rendercomp->scaleY, obj.getX() + rendercomp->sizeX / 2, obj.getY() + rendercomp->sizeY / 2);
-  //states.transform = trans;
   states.texture = rendercomp->comptexture;
 
-  pwindow->draw(quadver, states);
+  graphicsValues::pwindow->draw(quadver, states);
 }
 
 void renderObjectLists(std::vector<std::pair<sf::Texture *, sf::VertexArray>> &renderList)
@@ -121,17 +123,17 @@ void renderObjectLists(std::vector<std::pair<sf::Texture *, sf::VertexArray>> &r
     sf::RenderStates states;
     states.texture = i->first;
 
-    pwindow->draw(i->second, states);
+    graphicsValues::pwindow->draw(i->second, states);
   }
 }
 
 //Returns 0 if no error
 int renderFrame(std::vector<gameObject *> &objects)
 {
-  pwindow->clear();
+  graphicsValues::pwindow->clear();
   if(objects.empty())
   {
-    pwindow->display();
+    graphicsValues::pwindow->display();
     return 0;
   }
 
@@ -165,12 +167,29 @@ int renderFrame(std::vector<gameObject *> &objects)
       vertices.clear();
       curTexture = rendercomp->comptexture;
     }
-
+    
+    //For rotation
+    float rotCos = cos(rendercomp->rot);
+    float rotSin = sin(rendercomp->rot);
+    int xSiz = rendercomp->textXSize;
+    int ySiz = rendercomp->textYSize;
     //Add object's vertices to vertex array
-    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX(), (*i)->getY()), sf::Vector2f(rendercomp->textX1, rendercomp->textY1)));
-    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + rendercomp->textXSize, (*i)->getY()), sf::Vector2f(rendercomp->textX2, rendercomp->textY1)));
-    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + rendercomp->textXSize, (*i)->getY() + rendercomp->textYSize), sf::Vector2f(rendercomp->textX2, rendercomp->textY2)));
-    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX(), (*i)->getY() + rendercomp->textYSize), sf::Vector2f(rendercomp->textX1, rendercomp->textY2)));
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + (xSiz / 2) + ((-xSiz / 2) * rotCos - (-ySiz / 2) * rotSin),
+       (*i)->getY() + (ySiz / 2) + ((-xSiz / 2) * rotSin + (-ySiz / 2) * rotCos)),
+      sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
+      sf::Vector2f(rendercomp->textX1, rendercomp->textY1)));
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() - (xSiz / 2) + ((xSiz / 2) * rotCos - (-ySiz / 2) * rotSin),
+       (*i)->getY() + (ySiz / 2) + ((xSiz / 2) * rotSin + (-ySiz / 2) * rotCos)),
+      sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
+      sf::Vector2f(rendercomp->textX2, rendercomp->textY1)));
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() - (xSiz / 2) + ((xSiz / 2) * rotCos - (ySiz / 2) * rotSin),
+        (*i)->getY() - (ySiz / 2) + ((xSiz / 2) * rotSin + (ySiz / 2) * rotCos)),
+      sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
+      sf::Vector2f(rendercomp->textX2, rendercomp->textY2)));
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + (xSiz / 2) + ((-xSiz / 2) * rotCos - (ySiz / 2) * rotSin),
+        (*i)->getY() - (ySiz / 2) + ((-xSiz / 2) * rotSin + (ySiz / 2) * rotCos)),
+      sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
+      sf::Vector2f(rendercomp->textX1, rendercomp->textY2)));
   }
   //Render final objects
   if(vertices.getVertexCount())
@@ -179,7 +198,7 @@ int renderFrame(std::vector<gameObject *> &objects)
     renderObjectLists(rList);
   }
 
-  pwindow->display();
+  graphicsValues::pwindow->display();
   return 0;
 }
 
@@ -187,7 +206,7 @@ int renderFrame(std::vector<gameObject *> &objects)
 void checkCloseWindow()
 {
   sf::Event event;
-  while(pwindow->pollEvent(event))
+  while(graphicsValues::pwindow->pollEvent(event))
   {
     if(event.type == sf::Event::Closed)
         statusValues::gameIsRunning = 0;
@@ -197,8 +216,8 @@ void checkCloseWindow()
 //Destroys the window, as well as all other graphics components
 void unloadGraphics()
 {
-  pwindow->close();
-  delete pwindow;
+  graphicsValues::pwindow->close();
+  delete graphicsValues::pwindow;
 }
 
 //Returns a pointer to the texture with the passed name
