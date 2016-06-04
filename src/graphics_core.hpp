@@ -18,8 +18,6 @@ namespace sf
 int initGraphics(int resX, int resY, const char *windowTitle);
 int loadAllTextures();
 int renderFrame(std::vector<gameObject *> &objects);
-//Call this every frame to check if the window needs to be closed
-void checkCloseWindow();
 //Destroys the window, as well as all other graphics components
 void unloadGraphics();
 void loadTexture(const char *loc, const char *name, int *currentret);

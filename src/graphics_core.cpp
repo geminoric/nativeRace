@@ -167,7 +167,7 @@ int renderFrame(std::vector<gameObject *> &objects)
       vertices.clear();
       curTexture = rendercomp->comptexture;
     }
-    
+
     //For rotation
     float rotCos = cos(rendercomp->rot);
     float rotSin = sin(rendercomp->rot);
@@ -178,18 +178,23 @@ int renderFrame(std::vector<gameObject *> &objects)
        (*i)->getY() + (ySiz / 2) + ((-xSiz / 2) * rotSin + (-ySiz / 2) * rotCos)),
       sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
       sf::Vector2f(rendercomp->textX1, rendercomp->textY1)));
-    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() - (xSiz / 2) + ((xSiz / 2) * rotCos - (-ySiz / 2) * rotSin),
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + (xSiz / 2) + ((xSiz / 2) * rotCos - (-ySiz / 2) * rotSin),
        (*i)->getY() + (ySiz / 2) + ((xSiz / 2) * rotSin + (-ySiz / 2) * rotCos)),
       sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
       sf::Vector2f(rendercomp->textX2, rendercomp->textY1)));
-    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() - (xSiz / 2) + ((xSiz / 2) * rotCos - (ySiz / 2) * rotSin),
-        (*i)->getY() - (ySiz / 2) + ((xSiz / 2) * rotSin + (ySiz / 2) * rotCos)),
+    vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + (xSiz / 2) + ((xSiz / 2) * rotCos - (ySiz / 2) * rotSin),
+        (*i)->getY() + (ySiz / 2) + ((xSiz / 2) * rotSin + (ySiz / 2) * rotCos)),
       sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
       sf::Vector2f(rendercomp->textX2, rendercomp->textY2)));
     vertices.append(sf::Vertex(sf::Vector2f((*i)->getX() + (xSiz / 2) + ((-xSiz / 2) * rotCos - (ySiz / 2) * rotSin),
-        (*i)->getY() - (ySiz / 2) + ((-xSiz / 2) * rotSin + (ySiz / 2) * rotCos)),
+        (*i)->getY() + (ySiz / 2) + ((-xSiz / 2) * rotSin + (ySiz / 2) * rotCos)),
       sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
       sf::Vector2f(rendercomp->textX1, rendercomp->textY2)));
+
+    if(rendercomp->comptexture == findTexture("Planet_01"))
+    {
+
+    }
   }
   //Render final objects
   if(vertices.getVertexCount())
@@ -200,17 +205,6 @@ int renderFrame(std::vector<gameObject *> &objects)
 
   graphicsValues::pwindow->display();
   return 0;
-}
-
-//Call this every frame to check if the window needs to be closed
-void checkCloseWindow()
-{
-  sf::Event event;
-  while(graphicsValues::pwindow->pollEvent(event))
-  {
-    if(event.type == sf::Event::Closed)
-        statusValues::gameIsRunning = 0;
-  }
 }
 
 //Destroys the window, as well as all other graphics components

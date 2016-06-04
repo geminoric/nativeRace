@@ -4,6 +4,7 @@
 #include "game_object.hpp"
 #include "background.hpp"
 #include "camera.hpp"
+#include "eventHandler.hpp"
 #include <vector>
 #include <memory>
 #include <iostream>
@@ -47,8 +48,8 @@ int main()
   while(statusValues::gameIsRunning)
   {
       renderFrame(gameControl::gameObjects);
-      checkCloseWindow();
 
+      handleEvents();
       gameControl::runObjectUpdate();
 
       //Update framerate

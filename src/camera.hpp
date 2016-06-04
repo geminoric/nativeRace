@@ -10,6 +10,7 @@ public:
   float camX;
   float camY;
   float camSpeed;
+  float zoom;
 
   camera(float x, float y, bool active);
   void updateCameraPos();

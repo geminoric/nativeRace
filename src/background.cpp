@@ -14,14 +14,17 @@ void backgroundGeneration()
     int rNum = rand() % 3;
     float planetSize = rand() % 300 + 112.0f;
     if(rNum == 0)
-      planet->addComponent(new render("Planet_01", 0, 512, 0, 512, planetSize, planetSize));
+      planet->addComponent(new render("Planet_01", 0, 512, 0, 512, planetSize, planetSize,
+        rand() % 155 + 100, rand() % 155 + 100, rand() % 155 + 100, 255, rand() % 62 / 10.0f));
     else if(rNum == 1)
-      planet->addComponent(new render("Planet_02", 0, 512, 0, 512, planetSize, planetSize, 255, 255, 255, 255, 0.1f));
+      planet->addComponent(new render("Planet_02", 0, 512, 0, 512, planetSize, planetSize,
+        rand() % 155 + 100, rand() % 155 + 100, rand() % 155 + 100, 255, rand() % 62 / 10.0f));
     else if(rNum == 2)
-      planet->addComponent(new render("Planet_03", 0, 512, 0, 512, planetSize, planetSize));
+      planet->addComponent(new render("Planet_03", 0, 512, 0, 512, planetSize, planetSize,
+        rand() % 155 + 100, rand() % 155 + 100, rand() % 155 + 100, 255, rand() % 62 / 10.0f));
   }
   //Stars
-  for(int i = 0;i < 4000;++i)
+  for(int i = 0;i < 2000;++i)
   {
     gameObject *star = gameControl::createObject((rand() % 1920 - 1000) * 4, (rand() % 1080 - 500) * 4, 0.0f);
     float starSize = rand() % 22 + 2.0f;
@@ -30,6 +33,6 @@ void backgroundGeneration()
 
     //Add inside brightness of star
     gameObject *star2 = gameControl::createObject(star->getX(), star->getY(), 0.001f);
-    star2->addComponent(new render("Star_04_Inside", 0, 32, 0, 32, starSize * 16, starSize * 16, 255 ,255 ,255 , 255, 0.1f));
+    star2->addComponent(new render("Star_04_Inside", 0, 32, 0, 32, starSize, starSize, 255 ,255 ,255 , 255, 0.1f));
   }
 }

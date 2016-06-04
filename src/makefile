@@ -4,7 +4,7 @@ CC=g++-4.9
 CFLAGS=-c -g -O2 -Wall -ansi -pedantic -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -std=gnu++11 -Wno-reorder
 
 ERASE=rm
-OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o $(DIR)background.o $(DIR)camera.o
+OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o $(DIR)background.o $(DIR)camera.o $(DIR)eventHandler.o
 DIR=gnu/
 EXE=nativeRace
 
@@ -13,7 +13,7 @@ EXE=nativeRace
 $(EXE) : $(OBJECTS)
 	$(CC) -o $(EXE) $(OBJECTS) -lsfml-graphics -lsfml-window -lsfml-system
 
-$(DIR)main.o : main.cpp graphics_core.hpp game.hpp game_object.hpp background.hpp camera.hpp
+$(DIR)main.o : main.cpp graphics_core.hpp game.hpp game_object.hpp background.hpp camera.hpp eventHandler.hpp
 	$(CC) -o $(DIR)main.o $(CFLAGS) main.cpp
   
 $(DIR)graphics_core.o : graphics_core.cpp graphics_core.hpp graphics_components.hpp game.hpp game_object.hpp
@@ -36,6 +36,10 @@ $(DIR)background.o : background.cpp background.hpp
 
 $(DIR)camera.o : camera.cpp camera.hpp
 	$(CC) -o $(DIR)camera.o $(CFLAGS) camera.cpp
+
+$(DIR)eventHandler.o : eventHandler.cpp eventHandler.hpp
+	$(CC) -o $(DIR)eventHandler.o $(CFLAGS) eventHandler.cpp
+
 
 clean :
 	$(ERASE) $(EXE) $(OBJECTS)
