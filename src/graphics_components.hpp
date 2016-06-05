@@ -25,9 +25,6 @@ public:
   int red, green, blue, alpha;
   sf::Texture *comptexture;
 
-  //Used to increment the id only when a new component type is created
-  static bool idAlreadyCreated;
-
   //sizX, sizY (textXSize, textYSize) sets visible size
   render(int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
     int red_ = 255, int blue_ = 255, int green_ = 255, int alpha_ = 255, float rotRad = 0.0f);
@@ -50,7 +47,6 @@ class animation : public component
 public:
   float currentFrame;
   float frameTimeMult;
-  static bool idAlreadyCreated;
 
   animation(gameObject *ownerObject, float frameTimeMultiplier = 1.0f);
   ~animation();

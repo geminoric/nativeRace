@@ -4,10 +4,8 @@
 #include <iostream>
 #define DEFAULT_CAM_SPEED 10
 #define ZOOM_RATE 0.2
-#define MIN_ZOOM 0.4
-#define MAX_ZOOM 3
-
-bool camera::idAlreadyCreated = false;
+#define MIN_ZOOM 1
+#define MAX_ZOOM 10
 
 namespace graphicsValues
 {
@@ -25,10 +23,6 @@ namespace cameraValues
 
 camera::camera(float x, float y, bool active) : camX(x), camY(y), isActive(active), camSpeed(DEFAULT_CAM_SPEED), zoom(1.0f)
 {
-  //Increment the id 
-  if(idAlreadyCreated)return;
-  id = totalID++;
-  idAlreadyCreated = true;
 }
 
 void camera::updateCameraPos()
@@ -43,10 +37,10 @@ void camera::updateCameraPos()
 void camera::onUpdate()
 {
   //Check for movement input
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))camY -= camSpeed;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))camY += camSpeed;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))camX -= camSpeed;
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))camX += camSpeed;
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))camY -= zoom * camSpeed;
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))camY += zoom * camSpeed;
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))camX -= zoom * camSpeed;
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))camX += zoom * camSpeed;
 
   //Zooming in/out
   zoom -= cameraValues::scrollDelta * ZOOM_RATE;

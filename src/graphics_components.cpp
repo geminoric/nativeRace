@@ -2,9 +2,6 @@
 #include "game_object.hpp"
 #include <iostream>
 
-bool render::idAlreadyCreated = false;
-bool animation::idAlreadyCreated = false;
-
 namespace statusValues
 {
   extern float timeMultiplier;
@@ -16,10 +13,6 @@ render::render(int texX1, int texX2, int texY1, int texY2, float sizX, float siz
   sizeX(sizX), sizeY(sizY), textXSize(sizX), textYSize(sizY),
   red(red_), green(green_), blue(blue_), alpha(alpha_), rot(rotRad)
 {
-  //Increment the id 
-  if(idAlreadyCreated)return;
-  id = totalID++;
-  idAlreadyCreated = true;
 }
 
 render::render(sf::Texture *texture, int texX1, int texX2, int texY1, int texY2,
@@ -28,10 +21,6 @@ render::render(sf::Texture *texture, int texX1, int texX2, int texY1, int texY2,
   sizeX(sizX), sizeY(sizY), textXSize(sizX), textYSize(sizY),
   red(red_), green(green_), blue(blue_), alpha(alpha_), rot(rotRad)
 {
-  //Increment the id 
-  if(idAlreadyCreated)return;
-  id = totalID++;
-  idAlreadyCreated = true;
 }
 
 render::render(const char *textName, int texX1, int texX2, int texY1, int texY2,
@@ -40,10 +29,6 @@ render::render(const char *textName, int texX1, int texX2, int texY1, int texY2,
     sizeX(sizX), sizeY(sizY), textXSize(sizX), textYSize(sizY),
   red(red_), green(green_), blue(blue_), alpha(alpha_), rot(rotRad)
 {
-  //Increment the id 
-  if(idAlreadyCreated)return;
-  id = totalID++;
-  idAlreadyCreated = true;
 }
 
 render::~render()
@@ -54,10 +39,6 @@ render::~render()
 animation::animation(gameObject *ownerObject, float frameTimeMultiplier) : frameTimeMult(frameTimeMultiplier), currentFrame(0.0f)
 {
   owner = ownerObject;
-  //Increment the id 
-  if(idAlreadyCreated)return;
-  id = totalID++;
-  idAlreadyCreated = true;
   //Set up animation owner's texture pointer
   ownerTexture = &(owner->getComponent<render>("render")->comptexture);
 }

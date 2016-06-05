@@ -5,6 +5,8 @@
 #include "background.hpp"
 #include "camera.hpp"
 #include "eventHandler.hpp"
+#include "ui.hpp"
+#include "initLogic.hpp"
 #include <vector>
 #include <memory>
 #include <iostream>
@@ -41,16 +43,21 @@ int main()
 
   gameObject *cam = gameControl::createObject(0, 0, 0.0f);
   cam->addComponent(new camera(0.0f, 0.0f, true));
-  backgroundGeneration();
+  comPointers::pCamera = cam->getComponent<camera>("camera");
+
+  createUI();
+  mainInit();
+  structureGeneration();
 
   std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
   while(statusValues::gameIsRunning)
   {
-      renderFrame(gameControl::gameObjects);
-
+      updateUI();
+      sectorManagement();
       handleEvents();
       gameControl::runObjectUpdate();
+      renderFrame(gameControl::gameObjects);
 
       //Update framerate
       ++fpsUpdateCountCur;

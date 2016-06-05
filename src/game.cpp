@@ -1,5 +1,6 @@
 #include <vector>
 #include <memory>
+#include <iostream>
 #include "game.hpp"
 #include "game_object.hpp"
 
@@ -72,6 +73,19 @@ namespace gameControl
     {
       delete gameObjects.back();
       gameObjects.pop_back();
+    }
+  }
+
+  void deleteObject(gameObject *obj)
+  {
+    for(std::vector<gameObject *>::iterator i = gameObjects.begin(); i != gameObjects.end(); ++i)
+    {
+      if(*i == obj && *i)
+      {
+        *i = 0;
+        gameObjects.erase(i);
+        delete obj;
+      }
     }
   }
 

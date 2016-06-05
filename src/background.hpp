@@ -1,6 +1,7 @@
 #ifndef BACKGROUND_HPP
 #define BACKGROUND_HPP
 
-void backgroundGeneration();
+void structureGeneration();
+void sectorManagement();
 
 #endif

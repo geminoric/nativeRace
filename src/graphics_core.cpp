@@ -82,6 +82,11 @@ int loadAllTextures()
   loadTexture("../images/Star_03.png", "Star_03", &ret, 32, 32);
   loadTexture("../images/Star_04.png", "Star_04", &ret, 32, 32);
   loadTexture("../images/Star_04_Inside.png", "Star_04_Inside", &ret, 32, 32);
+  loadTexture("../images/resource_ore.png", "resource_ore", &ret, 64, 64);
+  loadTexture("../images/resource_green.png", "resource_green", &ret, 64, 64);
+  loadTexture("../images/resource_purple.png", "resource_purple", &ret, 64, 64);
+  loadTexture("../images/resource_orange.png", "resource_orange", &ret, 64, 64);
+  loadTexture("../images/Station_Base.png", "Station_Base", &ret, 512, 512);
   loadTexture("../images/WhitePixel.png", "WhitePixel", &ret, 4, 4);
 
   return ret;
