@@ -4,6 +4,7 @@
 #include "game.hpp"
 #include "graphics_components.hpp"
 #include "empire_components.hpp"
+#include "sector.hpp"
 
 #define ICON_SIZE 48
 
@@ -12,7 +13,7 @@ namespace sectorMgmt
   extern int sectorSize;
 }
 
-planet::planet(int ore_, int green_, int purple_, int orange_, int posX, int posY, int planetSize) : ore(ore_), green(green_), purple(purple_), orange(orange_)
+planet::planet(int ore_, int green_, int purple_, int orange_, int posX, int posY, int planetSize, sector *target) : ore(ore_), green(green_), purple(purple_), orange(orange_)
 {
   int numRes = !!ore + !!green + !!orange + !!purple;
   //Create resource icons
@@ -23,28 +24,28 @@ planet::planet(int ore_, int green_, int purple_, int orange_, int posX, int pos
     {
       gameObject *res = gameControl::createObject(posX + planetSize / 2 + (-ICON_SIZE / 2 * numRes) + ICON_SIZE * i, posY + planetSize / 2 + 0.0f, 7.0f);
       res->addComponent(new render("resource_ore", 0, 64, 0, 64, ICON_SIZE, ICON_SIZE));
-      res->addComponent(new cleanable((int)posX / sectorMgmt::sectorSize * sectorMgmt::sectorSize, (int)posY / sectorMgmt::sectorSize * sectorMgmt::sectorSize));
+      target->addToSector(res);
       ore_ = 0;
     }
     else if(green_)
     {
       gameObject *res = gameControl::createObject(posX + planetSize / 2 + (-ICON_SIZE / 2 * numRes) + ICON_SIZE * i, posY + planetSize / 2 + 0.0f, 7.0f);
       res->addComponent(new render("resource_green", 0, 64, 0, 64, ICON_SIZE, ICON_SIZE));
-      res->addComponent(new cleanable((int)posX / sectorMgmt::sectorSize * sectorMgmt::sectorSize, (int)posY / sectorMgmt::sectorSize * sectorMgmt::sectorSize));
+      target->addToSector(res);
       green_ = 0;
     }
     else if(purple_)
     {
       gameObject *res = gameControl::createObject(posX + planetSize / 2 + (-ICON_SIZE / 2 * numRes) + ICON_SIZE * i, posY + planetSize / 2 + 0.0f, 7.0f);
       res->addComponent(new render("resource_purple", 0, 64, 0, 64, ICON_SIZE, ICON_SIZE));
-      res->addComponent(new cleanable((int)posX / sectorMgmt::sectorSize * sectorMgmt::sectorSize, (int)posY / sectorMgmt::sectorSize * sectorMgmt::sectorSize));
+      target->addToSector(res);
       purple_ = 0;
     }
     else if(orange_)
     {
       gameObject *res = gameControl::createObject(posX + planetSize / 2 + (-ICON_SIZE / 2 * numRes) + ICON_SIZE * i, posY + planetSize / 2 + 0.0f, 7.0f);
       res->addComponent(new render("resource_orange", 0, 64, 0, 64, ICON_SIZE, ICON_SIZE));
-      res->addComponent(new cleanable((int)posX / sectorMgmt::sectorSize * sectorMgmt::sectorSize, (int)posY / sectorMgmt::sectorSize * sectorMgmt::sectorSize));
+      target->addToSector(res);
       orange_ = 0;
     }
   }

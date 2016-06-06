@@ -13,15 +13,4 @@ public:
   const char *getCompName() { return "resources"; }
 };
 
-//If an object has this class it will be cleaned up when it goes out of sector manager
-class cleanable : public component
-{
-public:
-  //Sector coordinates
-  int centerX;
-  int centerY;
-  cleanable(int cX, int cY) : centerX(cX), centerY(cY) {}
-  const char *getCompName() { return "cleanable"; }
-};
-
 #endif

@@ -5,7 +5,7 @@
 #define DEFAULT_CAM_SPEED 10
 #define ZOOM_RATE 0.2
 #define MIN_ZOOM 1
-#define MAX_ZOOM 10
+#define MAX_ZOOM 5
 
 namespace graphicsValues
 {

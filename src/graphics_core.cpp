@@ -81,6 +81,7 @@ int loadAllTextures()
   loadTexture("../images/Star_02.png", "Star_02", &ret, 32, 32);
   loadTexture("../images/Star_03.png", "Star_03", &ret, 32, 32);
   loadTexture("../images/Star_04.png", "Star_04", &ret, 32, 32);
+  loadTexture("../images/Star_05.png", "Star_05", &ret, 256, 256);
   loadTexture("../images/Star_04_Inside.png", "Star_04_Inside", &ret, 32, 32);
   loadTexture("../images/resource_ore.png", "resource_ore", &ret, 64, 64);
   loadTexture("../images/resource_green.png", "resource_green", &ret, 64, 64);
@@ -88,6 +89,12 @@ int loadAllTextures()
   loadTexture("../images/resource_orange.png", "resource_orange", &ret, 64, 64);
   loadTexture("../images/Station_Base.png", "Station_Base", &ret, 512, 512);
   loadTexture("../images/WhitePixel.png", "WhitePixel", &ret, 4, 4);
+  loadTexture("../images/starField_01.png", "starField_01", &ret, 1024, 1024);
+  loadTexture("../images/starField_02.png", "starField_02", &ret, 1024, 1024);
+  loadTexture("../images/starField_03.png", "starField_03", &ret, 1024, 1024);
+  loadTexture("../images/starField_04.png", "starField_04", &ret, 1024, 1024);
+  loadTexture("../images/starField_05.png", "starField_05", &ret, 1024, 1024);
+  loadTexture("../images/starField_Base.png", "starField_Base", &ret, 1024, 1024);
 
   return ret;
 }

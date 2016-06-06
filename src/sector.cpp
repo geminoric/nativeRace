@@ -3,12 +3,12 @@
 #include "game_object.hpp"
 #include "game.hpp"
 
-~sector::sector()
+sector::~sector()
 {
   //Delete all objects in the sector
   for(std::vector<gameObject *>::iterator i = objectsInSector.begin();i != objectsInSector.end();++i)
   {
-    deleteObject((*i));
+    gameControl::deleteObject((*i));
   }
 }
 

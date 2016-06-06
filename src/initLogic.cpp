@@ -1,8 +1,9 @@
 #include "initLogic.hpp"
 #include "game_object.hpp"
 #include "camera.hpp"
+#include "background.hpp"
 
-#define SECTOR_SIZE 1000
+#define SECTOR_SIZE 5000
 
 namespace sectorMgmt
 {
@@ -19,9 +20,15 @@ namespace comPointers
   extern camera *pCamera;
 }
 
+namespace gameControl
+{
+  extern int worldSeed;
+}
+
 void initSector()
 {
   using namespace sectorMgmt;
+  gameControl::worldSeed = 420;
   sectorSize = SECTOR_SIZE;
   for(int i = 0;i < 7;++i)
     for(int j = 0;j < 7;++j)genedSectors[i][j] = false;
