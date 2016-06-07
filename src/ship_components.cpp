@@ -8,8 +8,10 @@
 #include "particles.hpp"
 
 #define ANGLE_EPSILON 0.2
-#define TARGET_EPSILON_SQ 10000
-#define DISTANCE_DECREASE_THRUST_SQ 40000
+#define TARGET_EPSILON_SQ 40000
+#define DISTANCE_DECREASE_THRUST_SQ 90000
+#define DISTANCE_BUMP_STOP 160000
+#define BUMP_FRAME_TO_STOP 120
 
 namespace statusValues
 {
@@ -21,7 +23,7 @@ namespace statusValues
 ship::ship(int hp, float acceleration, float deceleration, float maxSpeedSq, 
   float turnSpeed, gameObject *parent, float selectOffsetX_, float selectOffsetY_) : rot(0.0f), thrust(0.0f),
   health(hp), accel(acceleration), turnRate(turnSpeed), speedSq(maxSpeedSq), velX(0.0f), velY(0.0f), owner(parent),
-  decel(deceleration), selectOffsetX(selectOffsetX_), selectOffsetY(selectOffsetY_), autoMove(false)
+  decel(deceleration), selectOffsetX(selectOffsetX_), selectOffsetY(selectOffsetY_), autoMove(false), consecBump(0)
 {
   render *pRender = parent->getComponent<render>("render");
   //Create collision circle
@@ -60,7 +62,13 @@ void ship::onUpdate()
     if(rot < -3.1415f)rot = 2.0f * 3.14159265f + rot;
 
     float distSq = (targX - owner->x) * (targX - owner->x) + (targY - owner->y) * (targY - owner->y);
-    if(distSq > TARGET_EPSILON_SQ)
+
+    if(consecBump > BUMP_FRAME_TO_STOP && distSq < DISTANCE_BUMP_STOP)
+    {
+      thrust = 0.0f;
+      autoMove = false;
+    }
+    else if(distSq > TARGET_EPSILON_SQ)
     {
       float angleDif = angleToTarget - rot;
 
@@ -172,10 +180,9 @@ void shipThrust::onUpdate()
   {
     render *parRender = parent->getComponent<render>("render");
     //Create particles
-    
     gameObject *part = gameControl::createObject(parent->x + parRender->textXSize / 2.0f + rand() % 30 - 15, 
       parent->y + parRender->textYSize / 2.0f + (sin(rot + 3.141592f) * parentYOffset) + rand() % 30 - 15, 29.6f);
-    part->addComponent(new particle(part, -pShip->velX, -pShip->velY, 0.9f, 5, "Thrust_Particle", 43, 42, 42));
+    part->addComponent(new particle(part, -pShip->velX, -pShip->velY, 0.9f, 2, "Thrust_Particle", 43, 42, 42));
     pRender->alpha = 255;
   }
 }

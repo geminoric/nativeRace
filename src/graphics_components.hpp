@@ -17,9 +17,6 @@ class render : public component
 public:
   float scaleX;
   float scaleY;
-  //sizeX, sizeY unused
-  float sizeX;
-  float sizeY;
   float rot; //Radians
   int textX1, textX2, textY1, textY2;
   int textXSize, textYSize;

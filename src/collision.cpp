@@ -3,6 +3,8 @@
 #include "game.hpp"
 #include "ship_components.hpp"
 
+#define BUMP_CONSTANT 0.001
+
 namespace gameControl
 {
   extern std::vector<gameObject *> gameObjects;
@@ -49,6 +51,8 @@ void circleCollision::checkBumping()
 {
   if(!bumpable || collisionID == -1 || collisionIDList.empty())return;
 
+  bool bumpedThisFrame = false;
+
   //Check for bumping with each object
   for(std::vector<gameObject *>::iterator i = gameControl::gameObjects.begin();i != gameControl::gameObjects.end();++i)
   {
@@ -66,19 +70,29 @@ void circleCollision::checkBumping()
           ship *pShip = owner->getComponent<ship>("ship");
           if(pShip)
           {
-            float deltaX = owner->x - (*i)->x;
-            float deltaY = owner->y - (*i)->y;
+            if(!bumpedThisFrame)
+            {
+              pShip->consecBump++;
+              bumpedThisFrame = true;
+            }
+
+            float deltaX = (owner->x - (*i)->x) * BUMP_CONSTANT;
+            float deltaY = (owner->y - (*i)->y) * BUMP_CONSTANT;
 
             float massScale = pOther->mass / mass;
-
-            pShip->velX += deltaX * massScale * colRatio;
-            pShip->velY += deltaY * massScale * colRatio;
+            pShip->velX += deltaX * massScale * colRatio * colRatio;
+            pShip->velY += deltaY * massScale * colRatio * colRatio;
           }
           else
             std::cout << "[WARNING] Bump detected with local object not ship\n";
         }
       }
     }
+  }
+  //Reset counter
+  if(!bumpedThisFrame)
+  {
+    owner->getComponent<ship>("ship")->consecBump = 0;
   }
 }
 

@@ -132,10 +132,9 @@ namespace gameControl
   {
     addQueueToList();
     deleteObjectQueue();
-    
+
     for(std::vector<gameObject *>::iterator i = gameObjects.begin(); i != gameObjects.end(); ++i)
     {
-      ++count;
       for(std::vector<std::shared_ptr<component>>::iterator j = (*i)->components.begin(); j != (*i)->components.end(); ++j)
       {
         (*j)->onUpdate();

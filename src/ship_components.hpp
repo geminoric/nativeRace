@@ -13,6 +13,8 @@ class ship : public component
   bool selected;
   gameObject *selectGlow, *pThrust;
 public:
+  //Consecutive frames this ship has been bumping
+  int consecBump;
   //If true, ship automatically moves towards target
   bool autoMove;
   int health;
