@@ -4,7 +4,7 @@ CC=g++-4.9
 CFLAGS=-c -g -O2 -Wall -ansi -pedantic -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -std=gnu++11 -Wno-reorder
 
 ERASE=rm
-OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o $(DIR)background.o $(DIR)camera.o $(DIR)eventHandler.o $(DIR)structure_components.o $(DIR)collision.o $(DIR)ui.o $(DIR)empire_components.o $(DIR)initLogic.o $(DIR)sector.o $(DIR)ship_components.o $(DIR)selection.o
+OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o $(DIR)background.o $(DIR)camera.o $(DIR)eventHandler.o $(DIR)structure_components.o $(DIR)collision.o $(DIR)ui.o $(DIR)empire_components.o $(DIR)initLogic.o $(DIR)sector.o $(DIR)ship_components.o $(DIR)selection.o $(DIR)particles.o
 DIR=gnu/
 EXE=nativeRace
 
@@ -63,6 +63,9 @@ $(DIR)ship_components.o : ship_components.cpp ship_components.hpp
 
 $(DIR)selection.o : selection.cpp selection.hpp
 	$(CC) -o $(DIR)selection.o $(CFLAGS) selection.cpp
+
+$(DIR)particles.o : particles.cpp particles.hpp
+	$(CC) -o $(DIR)particles.o $(CFLAGS) particles.cpp
 
 clean :
 	$(ERASE) $(EXE) $(OBJECTS)

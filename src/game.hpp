@@ -20,7 +20,7 @@ namespace gameControl
   //Call to unload the level with a custom function
   void unloadLevel(void(* destroyLevel)());
   //Returns the created object
-  gameObject * createObject(int x = 0, int y = 0, float z = 0.0f);
+  gameObject *createObject(int x = 0, int y = 0, float z = 0.0f);
   void deleteObject(gameObject *obj);
   void deleteAllObjects();
   //Runs onUpdate() for all game objects

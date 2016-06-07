@@ -4,6 +4,12 @@
 #include "game.hpp"
 #include "game_object.hpp"
 
+namespace
+{
+  std::vector<gameObject *> objectQueue;
+  std::vector<gameObject *> deleteQueue;
+}
+
 namespace gameControl
 {
   std::vector<gameObject *> gameObjects;
@@ -49,22 +55,42 @@ namespace gameControl
   }
 
   //Returns the created object
-  gameObject * createObject(int x, int y, float z)
+  gameObject *createObject(int x, int y, float z)
   {
     gameObject *newobj = new gameObject(x, y, z);
-    //Add the object to object list in correct z order
-    for(std::vector<gameObject *>::iterator i = gameObjects.begin(); i != gameObjects.end(); ++i)
+    objectQueue.push_back(newobj);
+    return newobj;
+  }
+
+  //Adds the current game object queue to list and then clears the queue
+  void addQueueToList()
+  {
+    for(std::vector<gameObject *>::iterator j = objectQueue.begin();j != objectQueue.end();++j)
     {
-      //Find place to insert
-      if(z < (*i)->getZ())
+      //Need to insert the first object manually
+      if(gameObjects.empty())
       {
-        gameObjects.insert(i, newobj);
-        return newobj;
+        gameObjects.push_back(*j);
+        continue;
+      }
+      //Add the object to object list in correct z order
+      for(std::vector<gameObject *>::iterator i = gameObjects.begin(); i != gameObjects.end(); ++i)
+      {
+        //Find place to insert
+        if((*j)->zOrder < (*i)->getZ())
+        {
+          gameObjects.insert(i, *j);
+          break;
+        }
+        else if (i + 1 == gameObjects.end())
+        {
+          //Add to end if it's leftover
+          gameObjects.push_back(*j);
+          break;
+        }
       }
     }
-    //Add to end if it's leftover
-    gameObjects.push_back(newobj);
-    return newobj;
+    objectQueue.clear();
   }
 
   void deleteAllObjects()
@@ -78,21 +104,38 @@ namespace gameControl
 
   void deleteObject(gameObject *obj)
   {
+    deleteQueue.push_back(obj);
+  }
+
+  //Delete all objects in the delete queue and then clear the queue
+  void deleteObjectQueue()
+  {
+    if(deleteQueue.empty())return;
+
     for(std::vector<gameObject *>::iterator i = gameObjects.begin(); i != gameObjects.end(); ++i)
     {
-      if(*i == obj && *i)
+      for(std::vector<gameObject *>::iterator j = deleteQueue.begin();j != deleteQueue.end();++j)
       {
-        *i = 0;
-        gameObjects.erase(i);
-        delete obj;
+        if(*i == *j)
+        {
+          *i = 0;
+          delete *i;
+          i = gameObjects.erase(i) - 1;
+        }
       }
     }
+
+    deleteQueue.clear();
   }
 
   void runObjectUpdate()
   {
+    addQueueToList();
+    deleteObjectQueue();
+    
     for(std::vector<gameObject *>::iterator i = gameObjects.begin(); i != gameObjects.end(); ++i)
     {
+      ++count;
       for(std::vector<std::shared_ptr<component>>::iterator j = (*i)->components.begin(); j != (*i)->components.end(); ++j)
       {
         (*j)->onUpdate();

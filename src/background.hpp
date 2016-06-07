@@ -3,6 +3,5 @@
 
 void structureGeneration();
 void sectorManagement();
-void generateStarTexture();
 
 #endif

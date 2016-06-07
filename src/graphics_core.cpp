@@ -97,6 +97,8 @@ int loadAllTextures()
   loadTexture("../images/starField_Base.png", "starField_Base", &ret, 1024, 1024);
   loadTexture("../images/selectGlow.png", "selectGlow", &ret, 256, 256);
   loadTexture("../images/selectionBox.png", "selectionBox", &ret, 100, 100);
+  loadTexture("../images/Thrust_08.png", "Thrust_08", &ret, 512, 512);
+  loadTexture("../images/Thrust_Particle.png", "Thrust_Particle", &ret, 43, 42);
 
   return ret;
 }

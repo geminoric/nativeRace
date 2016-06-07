@@ -53,9 +53,9 @@ void testInit()
   for(int i = 0;i < 5;++i)
     for(int j = 0;j < 5;++j)
     {
-      gameObject *nship = gameControl::createObject((i - 2) * 500, (j - 2) * 500, 10.0f);
+      gameObject *nship = gameControl::createObject((i - 2) * 500, (j - 2) * 500, 30.0f);
       nship->addComponent(new render("testship", 0, 512, 0, 512, 128, 128));
-      nship->addComponent(new ship(100, 1.0f, 0.3f, 144, 0.04f, nship, 0.0f, 20.0f));
+      nship->addComponent(new ship(100, 1.0f, 0.04f, 144, 0.04f, nship, 0.0f, 30.0f));
     }
 }
 

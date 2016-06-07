@@ -162,11 +162,8 @@ void checkMoveUnits()
     {
       (*i)->targX = statusValues::mouseX;
       (*i)->targY = statusValues::mouseY;
-      //Remove selected flag from ships
-      (*i)->setSelected(false);
+      (*i)->autoMove = true;
     }
-    //Clear selection after moving
-    selection::shipsInBox.clear();
   }
 }
 
