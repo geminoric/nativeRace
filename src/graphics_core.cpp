@@ -73,7 +73,7 @@ int loadAllTextures()
   int ret = 0;
   
   loadTexture("../images/BombDrone_On.png", "bombDroneOn", &ret, 512, 512);
-  loadTexture("../images/testship.png", "testShip", &ret, 512, 512);
+  loadTexture("../images/testship.png", "testship", &ret, 512, 512);
   loadTexture("../images/Planet_01.png", "Planet_01", &ret, 512, 512);
   loadTexture("../images/Planet_02.png", "Planet_02", &ret, 512, 512);
   loadTexture("../images/Planet_03.png", "Planet_03", &ret, 512, 512);
@@ -95,6 +95,8 @@ int loadAllTextures()
   loadTexture("../images/starField_04.png", "starField_04", &ret, 1024, 1024);
   loadTexture("../images/starField_05.png", "starField_05", &ret, 1024, 1024);
   loadTexture("../images/starField_Base.png", "starField_Base", &ret, 1024, 1024);
+  loadTexture("../images/selectGlow.png", "selectGlow", &ret, 256, 256);
+  loadTexture("../images/selectionBox.png", "selectionBox", &ret, 100, 100);
 
   return ret;
 }

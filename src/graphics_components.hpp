@@ -17,6 +17,7 @@ class render : public component
 public:
   float scaleX;
   float scaleY;
+  //sizeX, sizeY unused
   float sizeX;
   float sizeY;
   float rot; //Radians

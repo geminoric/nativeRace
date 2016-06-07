@@ -4,7 +4,7 @@ CC=g++-4.9
 CFLAGS=-c -g -O2 -Wall -ansi -pedantic -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -std=gnu++11 -Wno-reorder
 
 ERASE=rm
-OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o $(DIR)background.o $(DIR)camera.o $(DIR)eventHandler.o $(DIR)structure_components.o $(DIR)collision.o $(DIR)ui.o $(DIR)empire_components.o $(DIR)initLogic.o $(DIR)sector.o
+OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o $(DIR)background.o $(DIR)camera.o $(DIR)eventHandler.o $(DIR)structure_components.o $(DIR)collision.o $(DIR)ui.o $(DIR)empire_components.o $(DIR)initLogic.o $(DIR)sector.o $(DIR)ship_components.o $(DIR)selection.o
 DIR=gnu/
 EXE=nativeRace
 
@@ -52,11 +52,17 @@ $(DIR)ui.o : ui.cpp ui.hpp empire_components.hpp game_object.hpp game.hpp graphi
 $(DIR)empire_components.o : empire_components.cpp empire_components.hpp
 	$(CC) -o $(DIR)empire_components.o $(CFLAGS) empire_components.cpp
 
-$(DIR)initLogic.o : initLogic.cpp initLogic.hpp
+$(DIR)initLogic.o : initLogic.cpp initLogic.hpp ship_components.hpp
 	$(CC) -o $(DIR)initLogic.o $(CFLAGS) initLogic.cpp
 
 $(DIR)sector.o : sector.cpp sector.hpp
 	$(CC) -o $(DIR)sector.o $(CFLAGS) sector.cpp
+
+$(DIR)ship_components.o : ship_components.cpp ship_components.hpp
+	$(CC) -o $(DIR)ship_components.o $(CFLAGS) ship_components.cpp
+
+$(DIR)selection.o : selection.cpp selection.hpp
+	$(CC) -o $(DIR)selection.o $(CFLAGS) selection.cpp
 
 clean :
 	$(ERASE) $(EXE) $(OBJECTS)

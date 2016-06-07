@@ -7,6 +7,7 @@
 #include "eventHandler.hpp"
 #include "ui.hpp"
 #include "initLogic.hpp"
+#include "selection.hpp"
 #include <vector>
 #include <memory>
 #include <iostream>
@@ -56,6 +57,8 @@ int main()
       updateUI();
       sectorManagement();
       handleEvents();
+      manageSelection();
+      manageRTSControls();
       gameControl::runObjectUpdate();
       renderFrame(gameControl::gameObjects);
 
