@@ -99,6 +99,9 @@ int loadAllTextures()
   loadTexture("../images/selectionBox.png", "selectionBox", &ret, 100, 100);
   loadTexture("../images/Thrust_08.png", "Thrust_08", &ret, 512, 512);
   loadTexture("../images/Thrust_Particle.png", "Thrust_Particle", &ret, 43, 42);
+  loadTexture("../images/capCircle.png", "capCircle", &ret, 256, 256);
+  loadTexture("../images/moveParticle.png", "moveParticle", &ret, 32, 32);
+  loadTexture("../images/Fire_02.png", "Fire_02", &ret, 248, 248);
 
   return ret;
 }
@@ -206,11 +209,6 @@ int renderFrame(std::vector<gameObject *> &objects)
         (*i)->getY() + (ySiz / 2) + ((-xSiz / 2) * rotSin + (ySiz / 2) * rotCos)),
       sf::Color(rendercomp->red, rendercomp->green, rendercomp->blue, rendercomp->alpha),
       sf::Vector2f(rendercomp->textX1, rendercomp->textY2)));
-
-    if(rendercomp->comptexture == findTexture("Planet_01"))
-    {
-
-    }
   }
   //Render final objects
   if(vertices.getVertexCount())
@@ -218,7 +216,6 @@ int renderFrame(std::vector<gameObject *> &objects)
     rList.push_back(std::pair<sf::Texture *, sf::VertexArray>(curTexture, vertices));
     renderObjectLists(rList);
   }
-
   graphicsValues::pwindow->display();
   return 0;
 }

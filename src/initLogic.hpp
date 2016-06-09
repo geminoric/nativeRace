@@ -2,5 +2,6 @@
 #define INITLOGIC_HPP
 
 void mainInit();
+void tempCheckSpawnEnemies();
 
 #endif

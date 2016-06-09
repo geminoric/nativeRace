@@ -7,6 +7,8 @@
 #include "game_object.hpp"
 #include "selection.hpp"
 #include "camera.hpp"
+#include "game.hpp"
+#include "particles.hpp"
 
 namespace statusValues
 {
@@ -109,6 +111,7 @@ void updateObjectsInBox()
   {
     ship *pShip;
     if(!(pShip = (*i)->getComponent<ship>("ship")))continue;
+    if(pShip->factionID != 0)continue;
     render *pRender = (*i)->getComponent<render>("render");
 
     //Temp values for start of box collider
@@ -157,6 +160,16 @@ void checkMoveUnits()
 {
   if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
   {
+    //PARTICLES
+    if(!selection::shipsInBox.empty())
+    {
+      for(int i = 0;i < 25;++i)
+      {
+        gameObject *part = gameControl::createObject(statusValues::mouseX, statusValues::mouseY, 29.6f);
+        part->addComponent(new particle(part, rand() % 30 - 15, rand() % 30 - 15, 0.99, 10, "moveParticle", 32, 32, 10));
+      }
+    }
+
     selection::boxActive = false;
     for(std::vector<ship *>::iterator i = selection::shipsInBox.begin();i != selection::shipsInBox.end();++i)
     {

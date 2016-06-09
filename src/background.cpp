@@ -63,7 +63,7 @@ void generatePlanetsInArea(int x1, int y1, int x2, int y2, int num, sector *targ
 
     gameObject *planet_ = gameControl::createObject(posX, posY, float(rand() % 19) / 20.0f + 0.05f);
     int rNum = rand() % 3;
-    float planetSize = rand() % 200 + 200.0f;
+    float planetSize = rand() % 500 + 200.0f;
     planet_->addComponent(new circleCollision(planetSize * 2, planet_));
     circleCollision *col = planet_->getComponent<circleCollision>("circleCollision");
 
@@ -75,26 +75,26 @@ void generatePlanetsInArea(int x1, int y1, int x2, int y2, int num, sector *targ
       planet_->y = posY;
     }
     //Should have been planetSize / 2 in circleCollision constructor, didn't to make planets spawn further away
-    col->radius /= 4;
+    //col->radius /= 4;
 
 
     if(rNum == 0)
     {
       planet_->addComponent(new render("Planet_01", 0, 512, 0, 512, planetSize, planetSize,
         rand() % 155 + 100, rand() % 155 + 100, rand() % 155 + 100, 255, rand() % 62 / 10.0f));
-      planet_->addComponent(new planet(rand() % 32 / 10, rand() % 12 / 10, 0, 0, posX, posY, planetSize, target));
+      planet_->addComponent(new planet(rand() % 32 / 10, rand() % 12 / 10, 0, 0, posX, posY, planetSize, target, planet_));
     }
     else if(rNum == 1)
     {
       planet_->addComponent(new render("Planet_02", 0, 512, 0, 512, planetSize, planetSize,
         rand() % 155 + 100, rand() % 155 + 100, rand() % 155 + 100, 255, rand() % 62 / 10.0f));
-      planet_->addComponent(new planet(rand() % 22 / 10, rand() % 16 / 10, rand() % 14 / 10, rand() % 11 / 10, posX, posY, planetSize, target));
+      planet_->addComponent(new planet(rand() % 22 / 10, rand() % 16 / 10, rand() % 14 / 10, rand() % 11 / 10, posX, posY, planetSize, target, planet_));
     }
     else if(rNum == 2)
     {
       planet_->addComponent(new render("Planet_03", 0, 512, 0, 512, planetSize, planetSize,
         rand() % 155 + 100, rand() % 155 + 100, rand() % 155 + 100, 255, rand() % 62 / 10.0f));
-      planet_->addComponent(new planet(rand() % 22 / 10, rand() % 10 / 10, 0, rand() % 13 / 10, posX, posY, planetSize, target));
+      planet_->addComponent(new planet(rand() % 22 / 10, rand() % 10 / 10, 0, rand() % 13 / 10, posX, posY, planetSize, target, planet_));
     }
     target->addToSector(planet_);
   }

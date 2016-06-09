@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "structure_components.hpp"
 #include "game_object.hpp"
 #include "game.hpp"
@@ -11,10 +12,27 @@
 namespace sectorMgmt
 {
   extern int sectorSize;
+  std::vector<savedPlanet> savedPlanets;
 }
 
-planet::planet(int ore_, int green_, int purple_, int orange_, int posX, int posY, int planetSize, sector *target) : ore(ore_), green(green_), purple(purple_), orange(orange_)
+namespace playerData
 {
+  extern resources *playerResources;
+}
+
+planet::planet(int ore_, int green_, int purple_, int orange_, int posX, int posY, int planetSize_, sector *target, gameObject *parent, int maxCap) : 
+  ore(ore_), green(green_), purple(purple_), orange(orange_), ownerID(-1), owner(parent), capMax(maxCap), colR(0), colG(0), colB(0),
+  capThisFrame(false), capProgress(0), planetSize(planetSize_)
+{
+  //Create capture circle
+  pCapOwner = gameControl::createObject(owner->x + planetSize / 2, owner->y + planetSize / 2, owner->zOrder + 0.001f);
+  pCapOwner->addComponent(new render("capCircle", 0, 256, 0, 256, planetSize, planetSize, 255, 255, 255, 0));
+  pCapCircle = pCapOwner->getComponent<render>("render");
+  //Create sov circle
+  pSovOwner = gameControl::createObject(owner->x - planetSize * 3.5, owner->y - planetSize * 3.5, 42.123f);
+  pSovOwner->addComponent(new render("capCircle", 0, 256, 0, 256, planetSize * 8, planetSize * 8, 255, 255, 255, 0));
+  pSovCircle = pSovOwner->getComponent<render>("render");
+
   int numRes = !!ore + !!green + !!orange + !!purple;
   //Create resource icons
   //Starting position(-0.5 * ICON_SIZE * numRes) + ICON_SIZE * icon distance
@@ -49,4 +67,93 @@ planet::planet(int ore_, int green_, int purple_, int orange_, int posX, int pos
       orange_ = 0;
     }
   }
+  //If planet has already been captured load data and then delete the save
+  for(std::vector<savedPlanet>::iterator i = sectorMgmt::savedPlanets.begin(); i != sectorMgmt::savedPlanets.end();++i)
+  {
+    if(owner->x == i->x && owner->y == i->y)
+    {
+      capProgress = capMax;
+      ownerID = i->ownerFacID;
+      colR = i->ownerRes->redCol;
+      colG = i->ownerRes->greenCol;
+      colB = i->ownerRes->blueCol;
+      sectorMgmt::savedPlanets.erase(i);
+      break;
+    }
+  }
+}
+
+planet::~planet()
+{
+  //Save planet's owner
+  if(capProgress >= capMax)
+    sectorMgmt::savedPlanets.push_back(savedPlanet(owner->x, owner->y, ownerID, playerData::playerResources));
+  gameControl::deleteObject(pCapOwner);
+  gameControl::deleteObject(pSovOwner);
+}
+
+//Fix to work with more than the player faction
+void planet::capture(int facID, resources *facRes)
+{
+  if(capThisFrame || (capProgress >= capMax && facID == ownerID))return;
+
+  ++capProgress;
+  colR = facRes->redCol;
+  colG = facRes->greenCol;
+  colB = facRes->blueCol;
+  if(capProgress >= capMax)
+  {
+    ownerID = facID; 
+  }
+
+  capThisFrame = true;
+}
+
+void planet::deCapture(int facID)
+{
+  if(facID == ownerID)return;
+  --capProgress;
+  if(capProgress < 0)capProgress = 0;
+}
+
+void planet::updateCaptureColor()
+{
+  //Reset cap if no longer capping
+  if(!capThisFrame && capProgress < capMax)
+    {
+      capProgress -= 5;
+      if(capProgress < 0)capProgress = 0;
+    }
+  if(capProgress <= 0 || capProgress >= capMax)
+  {
+    pCapCircle->alpha = 0;
+    //Sov circle
+    if(capProgress >= capMax)
+    {
+      pSovCircle->red = colR;
+      pSovCircle->green = colG;
+      pSovCircle->blue = colB;
+      pSovCircle->alpha = 63;
+    }
+    return;
+  }
+  pSovCircle->alpha = 0;
+  //Capture circle
+  float capRatio = float(capProgress) / capMax;
+
+  pCapOwner->x = owner->x + planetSize / 2 * (1.0 - capRatio);
+  pCapOwner->y = owner->y + planetSize / 2 * (1.0 - capRatio);
+
+  pCapCircle->alpha = 255;
+  pCapCircle->red = colR;
+  pCapCircle->green = colG;
+  pCapCircle->blue = colB;
+  pCapCircle->textXSize = planetSize * capRatio;
+  pCapCircle->textYSize = planetSize * capRatio;
+}
+
+void planet::onUpdate()
+{
+  updateCaptureColor();
+  capThisFrame = false;
 }

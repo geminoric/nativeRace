@@ -2,6 +2,7 @@
 #include "collision.hpp"
 #include "game.hpp"
 #include "ship_components.hpp"
+#include "structure_components.hpp"
 
 #define BUMP_CONSTANT 0.001
 
@@ -10,7 +11,12 @@ namespace gameControl
   extern std::vector<gameObject *> gameObjects;
 }
 
-circleCollision::circleCollision(int radius_, gameObject *owner_, int mass_, int colID) : radius(radius_), owner(owner_), collisionID(colID), mass(mass_)
+namespace playerData
+{
+  extern resources *playerResources;
+}
+
+circleCollision::circleCollision(int radius_, gameObject *owner_, int mass_, int colID) : radius(radius_), owner(owner_), collisionID(colID), mass(mass_), bumpable(false)
 {
   if(!mass)
   {
@@ -64,8 +70,8 @@ void circleCollision::checkBumping()
       for(std::vector<int>::iterator j = collisionIDList.begin();j != collisionIDList.end();++j)
       {
         float colRatio = isCollidingDistRatio(pOther);
-        if(pOther->collisionID == *j && colRatio)
-        {
+        if(pOther->collisionID == *j && colRatio
+)        {
           //Collision detected
           ship *pShip = owner->getComponent<ship>("ship");
           if(pShip)
@@ -96,7 +102,49 @@ void circleCollision::checkBumping()
   }
 }
 
+void circleCollision::checkPlanetCapture()
+{
+  ship *pShip = owner->getComponent<ship>("ship");
+  if(pShip)
+  {
+    for(std::vector<gameObject *>::iterator i = gameControl::gameObjects.begin();i != gameControl::gameObjects.end();++i)
+    {
+      if((*i) == owner)continue;
+      planet *pPlanet = (*i)->getComponent<planet>("planet");
+      if(!pPlanet)continue;
+
+      if(isColliding(*i))
+      {
+        if(pShip->factionID != 0)pPlanet->deCapture(pShip->factionID);
+        else
+          //Temp, replace so it works with not the player lul
+          pPlanet->capture(pShip->factionID, playerData::playerResources);      }
+    }
+  }
+}
+
+void circleCollision::checkBulletCol()
+{
+  bullet *pBullet = owner->getComponent<bullet>("bullet");
+  if(!pBullet)return;
+  for(std::vector<gameObject *>::iterator i = gameControl::gameObjects.begin();i != gameControl::gameObjects.end();++i)
+  {
+    if((*i) == owner)continue;
+    ship *pShip = (*i)->getComponent<ship>("ship");
+    if(!pShip)continue;
+
+    if(pBullet->facOwner != pShip->factionID && isColliding(*i))
+    {
+      pShip->health -= 5;
+      gameControl::deleteObject(owner);
+      return;
+    }
+  }
+}
+
 void circleCollision::onUpdate()
 {
+  checkBulletCol();
+  checkPlanetCapture();
   checkBumping();
 }

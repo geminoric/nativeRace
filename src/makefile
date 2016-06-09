@@ -4,7 +4,7 @@ CC=g++-4.9
 CFLAGS=-c -g -O2 -Wall -ansi -pedantic -Wextra -Werror -Wno-unused-variable -Wno-unused-parameter -std=gnu++11 -Wno-reorder
 
 ERASE=rm
-OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o $(DIR)background.o $(DIR)camera.o $(DIR)eventHandler.o $(DIR)structure_components.o $(DIR)collision.o $(DIR)ui.o $(DIR)empire_components.o $(DIR)initLogic.o $(DIR)sector.o $(DIR)ship_components.o $(DIR)selection.o $(DIR)particles.o
+OBJECTS=$(DIR)main.o $(DIR)graphics_core.o $(DIR)graphics_components.o $(DIR)component.o $(DIR)game.o $(DIR)game_object.o $(DIR)background.o $(DIR)camera.o $(DIR)eventHandler.o $(DIR)structure_components.o $(DIR)collision.o $(DIR)ui.o $(DIR)empire_components.o $(DIR)initLogic.o $(DIR)sector.o $(DIR)ship_components.o $(DIR)selection.o $(DIR)particles.o $(DIR)shipAI.o
 DIR=gnu/
 EXE=nativeRace
 
@@ -66,6 +66,9 @@ $(DIR)selection.o : selection.cpp selection.hpp
 
 $(DIR)particles.o : particles.cpp particles.hpp
 	$(CC) -o $(DIR)particles.o $(CFLAGS) particles.cpp
+
+$(DIR)shipAI.o : shipAI.cpp shipAI.hpp
+	$(CC) -o $(DIR)shipAI.o $(CFLAGS) shipAI.cpp
 
 clean :
 	$(ERASE) $(EXE) $(OBJECTS)

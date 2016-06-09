@@ -56,6 +56,7 @@ int main()
   {
       updateUI();
       sectorManagement();
+      tempCheckSpawnEnemies();
       handleEvents();
       manageSelection();
       manageRTSControls();

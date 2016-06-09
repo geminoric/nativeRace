@@ -25,11 +25,11 @@ public:
 
   //sizX, sizY (textXSize, textYSize) sets visible size
   render(int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
-    int red_ = 255, int blue_ = 255, int green_ = 255, int alpha_ = 255, float rotRad = 0.0f);
+    int red_ = 255, int green_ = 255, int blue_ = 255, int alpha_ = 255, float rotRad = 0.0f);
   render(sf::Texture *texture, int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
-    int red_ = 255, int blue_ = 255, int green_ = 255, int alpha_ = 255, float rotRad = 0.0f);
+    int red_ = 255, int green_ = 255, int blue_ = 255, int alpha_ = 255, float rotRad = 0.0f);
   render(const char *textName, int texX1, int texX2, int texY1, int texY2, float sizX, float sizY,
-    int red_ = 255, int blue_ = 255, int green_ = 255, int alpha_ = 255, float rotRad = 0.0f);
+    int red_ = 255, int green_ = 255, int blue_ = 255, int alpha_ = 255, float rotRad = 0.0f);
   ~render();
   void setTexture(sf::Texture *texture) { comptexture = texture; }
   void onUpdate() {}

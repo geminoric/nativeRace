@@ -3,6 +3,8 @@
 #include <iostream>
 #include "game.hpp"
 #include "game_object.hpp"
+#include "graphics_components.hpp"
+#include "graphics_core.hpp"
 
 namespace
 {
@@ -118,9 +120,10 @@ namespace gameControl
       {
         if(*i == *j)
         {
-          *i = 0;
           delete *i;
+          *i = 0;
           i = gameObjects.erase(i) - 1;
+          break;
         }
       }
     }

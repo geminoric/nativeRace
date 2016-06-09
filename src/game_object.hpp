@@ -14,6 +14,7 @@ public:
   float zOrder = 0;
   gameObject() : x(0.0f), y(0.0f), zOrder(0.0f) {}
   gameObject(int nx, int ny, float nz): x(nx), y(ny), zOrder(nz) {}
+  ~gameObject();
   float getX() const { return x; }
   float getY() const { return y; }
   float getZ() const { return zOrder; }

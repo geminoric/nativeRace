@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 #include "ship_components.hpp"
 #include "game.hpp"
 #include "game_object.hpp"
@@ -20,10 +21,16 @@ namespace statusValues
   extern float timeMultiplier;
 }
 
+namespace gameControl
+{
+  extern std::vector<gameObject *> gameObjects;
+}
+
 ship::ship(int hp, float acceleration, float deceleration, float maxSpeedSq, 
-  float turnSpeed, gameObject *parent, float selectOffsetX_, float selectOffsetY_) : rot(0.0f), thrust(0.0f),
+  float turnSpeed, gameObject *parent, float selectOffsetX_, float selectOffsetY_, int faction) : rot(0.0f), thrust(0.0f),
   health(hp), accel(acceleration), turnRate(turnSpeed), speedSq(maxSpeedSq), velX(0.0f), velY(0.0f), owner(parent),
-  decel(deceleration), selectOffsetX(selectOffsetX_), selectOffsetY(selectOffsetY_), autoMove(false), consecBump(0)
+  decel(deceleration), selectOffsetX(selectOffsetX_), selectOffsetY(selectOffsetY_), autoMove(false), consecBump(0),
+  factionID(faction), updateTargCount(0), enemyTarget(0), shootCooldown(0)
 {
   render *pRender = parent->getComponent<render>("render");
   //Create collision circle
@@ -45,12 +52,79 @@ ship::ship(int hp, float acceleration, float deceleration, float maxSpeedSq,
 
 ship::~ship()
 {
+  //Check if other ships are targeting this, if so delete the target
+  for(std::vector<gameObject *>::iterator i = gameControl::gameObjects.begin();i != gameControl::gameObjects.end();++i)
+  {
+    if(*i == owner)continue;
+
+    ship *pShip = (*i)->getComponent<ship>("ship");
+    if(pShip && pShip->enemyTarget == owner)
+      pShip->enemyTarget = 0;
+  }
   gameControl::deleteObject(selectGlow);
   gameControl::deleteObject(pThrust);
+  pThrust->getComponent<shipThrust>("shipThrust")->parent = 0;
+}
+
+void ship::checkUpdateEnemyTarget()
+{
+  if(updateTargCount <= 0)
+  {
+    enemyTarget = 0;
+    for(std::vector<gameObject *>::iterator i = gameControl::gameObjects.begin();i != gameControl::gameObjects.end();++i)
+    {
+      ship *pShip = (*i)->getComponent<ship>("ship");
+      if(!pShip || pShip->factionID == factionID)continue;
+
+      float distSq = ((*i)->x - owner->x) * ((*i)->x - owner->x) + ((*i)->y - owner->y) * ((*i)->y - owner->y);
+
+      if(distSq < 10000000)
+      {
+        enemyTarget = *i;
+        break;
+      }
+    }
+
+    updateTargCount = 60;
+  }
+  --updateTargCount;
+}
+
+void ship::checkShoot()
+{
+  if(shootCooldown <= 0 && enemyTarget)
+  {
+    gameObject *pbullet = gameControl::createObject(owner->x, owner->y, owner->zOrder - 0.001f);
+    pbullet->addComponent(new render("Fire_02", 0, 248, 0, 248, 128, 128));
+    pbullet->addComponent(new bullet(enemyTarget->x - owner->x, enemyTarget->y - owner->y, pbullet, factionID));
+    pbullet->addComponent(new circleCollision(64, pbullet));
+    pbullet->getComponent<circleCollision>("circleCollision")->addCollisionID(1);
+    shootCooldown = rand() % 100 + 200;
+  }
+  --shootCooldown;
+  if(shootCooldown < 0)shootCooldown = 0;
+}
+
+void ship::checkDie()
+{
+  if(health <= 0)
+  {
+    //Create particles
+    for(int i = 0;i < 25;++i)
+    {
+      gameObject *part = gameControl::createObject(owner->x, owner->y, owner->zOrder + 0.001f);
+      part->addComponent(new particle(part, rand() % 30 - 15, rand() % 30 - 15, 0.999, 2, "Fire_02", 248, 248, 124));
+    }
+
+    gameControl::deleteObject(owner);
+  }
 }
 
 void ship::onUpdate()
 {
+  checkUpdateEnemyTarget();
+  checkShoot();
+
   if(autoMove)
   {
     //Decelerate
@@ -129,8 +203,7 @@ void ship::onUpdate()
   //Update graphical stuff
   owner->getComponent<render>("render")->rot = rot + 3.141592f / 2.0f;
 
-  //Check if the ship dies
-  if(health < 0)gameControl::deleteObject(owner);
+  checkDie();
 }
 
 void ship::setThrust(float thrust_)
@@ -163,8 +236,12 @@ shipThrust::shipThrust(int thrustOffset, gameObject *parent_, gameObject *owner_
 
 void shipThrust::onUpdate()
 {
+  if(!parent)
+  {
+    pRender->alpha = 0;
+    return;
+  }
   ship *pShip = parent->getComponent<ship>("ship");
-
   float rot = pShip->rot;
   //Move to ship
   owner->x = parent->x + (parentXOffset - pShip->selectOffsetX + parentThrustOffset) * cos(rot + 3.141592f);
@@ -182,7 +259,16 @@ void shipThrust::onUpdate()
     //Create particles
     gameObject *part = gameControl::createObject(parent->x + parRender->textXSize / 2.0f + rand() % 30 - 15, 
       parent->y + parRender->textYSize / 2.0f + (sin(rot + 3.141592f) * parentYOffset) + rand() % 30 - 15, 29.6f);
-    part->addComponent(new particle(part, -pShip->velX, -pShip->velY, 0.9f, 2, "Thrust_Particle", 43, 42, 42));
+    part->addComponent(new particle(part, -pShip->velX, -pShip->velY, 0.9f, 5, "Thrust_Particle", 43, 42, 42));
     pRender->alpha = 255;
   }
+}
+
+void bullet::onUpdate()
+{
+  ++distTravelled;
+  float mag = sqrt(velX * velX + velY * velY);
+  owner->x += velX / mag * 50;
+  owner->y += velY / mag * 50;
+  if(distTravelled > 3000)gameControl::deleteObject(owner);
 }

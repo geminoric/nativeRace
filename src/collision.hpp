@@ -18,6 +18,7 @@ class circleCollision : public component
   gameObject *owner;
 
   void checkBumping();
+  void checkBulletCol();
   float isCollidingDistRatio(circleCollision *pOther);
 public:
   //If this is true object will bounce off other bumpable objects
@@ -32,6 +33,7 @@ public:
   circleCollision(int radius_, gameObject *owner_, int mass_ = 100, int colID = -1);
   bool isColliding(gameObject *other);
   bool isColliding(circleCollision *other);
+  void checkPlanetCapture();
   void addCollisionID(int id) { collisionIDList.push_back(id); }
 
   //Checks for bumping into things
